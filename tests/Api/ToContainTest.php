@@ -13,11 +13,15 @@ test('toContain creates an assertion with default parameters', function () {
 
     $result = $testCase->toContain('test');
 
-    expect($result)->toBe($testCase);
-    expect($testCase->assertions())->toHaveCount(1);
+    expect($result)->toBe($testCase)
+        ->and($testCase->assertions())->toHaveCount(1);
 
     $assertion = $testCase->assertions()[0];
-    expect($assertion)->toBeInstanceOf(Assertion::class);
+    expect($assertion)->toBeInstanceOf(Assertion::class)
+        ->and($assertion->type)->toBe('icontain')
+        ->and($assertion->value)->toBe('test')
+        ->and($assertion->threshold)->toBeNull()
+        ->and($assertion->options)->toBe([]);
 });
 
 test('toContain creates an icontain assertion when strict is false', function () {
@@ -28,8 +32,11 @@ test('toContain creates an icontain assertion when strict is false', function ()
     $testCase->toContain('test', strict: false);
 
     $assertion = $testCase->assertions()[0];
-    // We can't directly access the type, but we can verify it was created
-    expect($assertion)->toBeInstanceOf(Assertion::class);
+    expect($assertion)->toBeInstanceOf(Assertion::class)
+        ->and($assertion->type)->toBe('icontain')
+        ->and($assertion->value)->toBe('test')
+        ->and($assertion->threshold)->toBeNull()
+        ->and($assertion->options)->toBe([]);
 });
 
 test('toContain creates a contains assertion when strict is true', function () {
@@ -40,7 +47,11 @@ test('toContain creates a contains assertion when strict is true', function () {
     $testCase->toContain('test', strict: true);
 
     $assertion = $testCase->assertions()[0];
-    expect($assertion)->toBeInstanceOf(Assertion::class);
+    expect($assertion)->toBeInstanceOf(Assertion::class)
+        ->and($assertion->type)->toBe('contains')
+        ->and($assertion->value)->toBe('test')
+        ->and($assertion->threshold)->toBeNull()
+        ->and($assertion->options)->toBe([]);
 });
 
 test('toContain accepts a threshold parameter', function () {
@@ -53,7 +64,11 @@ test('toContain accepts a threshold parameter', function () {
 
     expect($testCase->assertions())->toHaveCount(1);
     $assertion = $testCase->assertions()[0];
-    expect($assertion)->toBeInstanceOf(Assertion::class);
+    expect($assertion)->toBeInstanceOf(Assertion::class)
+        ->and($assertion->type)->toBe('icontain')
+        ->and($assertion->value)->toBe('test')
+        ->and($assertion->threshold)->toBe(0.8)
+        ->and($assertion->options)->toBe([]);
 });
 
 test('toContain accepts options parameter', function () {
@@ -66,7 +81,11 @@ test('toContain accepts options parameter', function () {
 
     expect($testCase->assertions())->toHaveCount(1);
     $assertion = $testCase->assertions()[0];
-    expect($assertion)->toBeInstanceOf(Assertion::class);
+    expect($assertion)->toBeInstanceOf(Assertion::class)
+        ->and($assertion->type)->toBe('icontain')
+        ->and($assertion->value)->toBe('test')
+        ->and($assertion->threshold)->toBeNull()
+        ->and($assertion->options)->toBe($options);
 });
 
 test('toContain can be chained', function () {
@@ -79,6 +98,14 @@ test('toContain can be chained', function () {
         ->toContain('second')
         ->toContain('third');
 
-    expect($result)->toBe($testCase);
-    expect($testCase->assertions())->toHaveCount(3);
+    expect($result)->toBe($testCase)
+        ->and($testCase->assertions())->toHaveCount(3);
+
+    $assertions = $testCase->assertions();
+    expect($assertions[0]->value)->toBe('first')
+        ->and($assertions[1]->value)->toBe('second')
+        ->and($assertions[2]->value)->toBe('third')
+        ->and($assertions[0]->type)->toBe('icontain')
+        ->and($assertions[1]->type)->toBe('icontain')
+        ->and($assertions[2]->type)->toBe('icontain');
 });

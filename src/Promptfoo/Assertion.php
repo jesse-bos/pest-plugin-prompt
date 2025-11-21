@@ -7,10 +7,10 @@ namespace Pest\Prompt\Promptfoo;
 class Assertion
 {
     public function __construct(
-        private readonly string $type,
-        private readonly mixed $value,
-        private readonly ?float $threshold = null,
+        public readonly string $type,
+        public readonly mixed $value,
+        public readonly ?float $threshold = null,
         /** @var array<string, mixed>|null */
-        private readonly ?array $options = null
+        public readonly ?array $options = null
     ) {}
 }
