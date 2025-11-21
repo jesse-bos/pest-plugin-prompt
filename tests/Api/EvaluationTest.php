@@ -83,8 +83,8 @@ test('expect method creates and returns a TestCase', function () {
 
     $testCase = $evaluation->expect($variables);
 
-    expect($testCase)->toBeInstanceOf(TestCase::class);
-    expect($testCase->variables())->toBe($variables);
+    expect($testCase)->toBeInstanceOf(TestCase::class)
+        ->and($testCase->variables())->toBe($variables);
 });
 
 test('expect method can be called with no parameters', function () {
@@ -92,8 +92,8 @@ test('expect method can be called with no parameters', function () {
 
     $testCase = $evaluation->expect();
 
-    expect($testCase)->toBeInstanceOf(TestCase::class);
-    expect($testCase->variables())->toBe([]);
+    expect($testCase)->toBeInstanceOf(TestCase::class)
+        ->and($testCase->variables())->toBe([]);
 });
 
 test('expect method can be called with empty variables array', function () {
@@ -101,8 +101,8 @@ test('expect method can be called with empty variables array', function () {
 
     $testCase = $evaluation->expect([]);
 
-    expect($testCase)->toBeInstanceOf(TestCase::class);
-    expect($testCase->variables())->toBe([]);
+    expect($testCase)->toBeInstanceOf(TestCase::class)
+        ->and($testCase->variables())->toBe([]);
 });
 
 test('expect method can create multiple test cases', function () {
@@ -115,14 +115,14 @@ test('expect method can create multiple test cases', function () {
     $testCase2 = $evaluation->expect($variables2);
     $testCase3 = $evaluation->expect($variables3);
 
-    expect($testCase1)->toBeInstanceOf(TestCase::class);
-    expect($testCase2)->toBeInstanceOf(TestCase::class);
-    expect($testCase3)->toBeInstanceOf(TestCase::class);
-    expect($testCase1)->not->toBe($testCase2);
-    expect($testCase2)->not->toBe($testCase3);
-    expect($testCase1->variables())->toBe($variables1);
-    expect($testCase2->variables())->toBe($variables2);
-    expect($testCase3->variables())->toBe($variables3);
+    expect($testCase1)->toBeInstanceOf(TestCase::class)
+        ->and($testCase2)->toBeInstanceOf(TestCase::class)
+        ->and($testCase3)->toBeInstanceOf(TestCase::class)
+        ->and($testCase1)->not->toBe($testCase2)
+        ->and($testCase2)->not->toBe($testCase3)
+        ->and($testCase1->variables())->toBe($variables1)
+        ->and($testCase2->variables())->toBe($variables2)
+        ->and($testCase3->variables())->toBe($variables3);
 });
 
 test('clearTests method returns self', function () {
@@ -164,8 +164,8 @@ test('expect method works after clearTests', function () {
     $evaluation->clearTests();
     $testCase2 = $evaluation->expect($variables2);
 
-    expect($testCase1)->toBeInstanceOf(TestCase::class);
-    expect($testCase2)->toBeInstanceOf(TestCase::class);
-    expect($testCase2)->not->toBe($testCase1);
-    expect($testCase2->variables())->toBe($variables2);
+    expect($testCase1)->toBeInstanceOf(TestCase::class)
+        ->and($testCase2)->toBeInstanceOf(TestCase::class)
+        ->and($testCase2)->not->toBe($testCase1)
+        ->and($testCase2->variables())->toBe($variables2);
 });

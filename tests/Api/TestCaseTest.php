@@ -38,9 +38,9 @@ test('it can add an assertion', function () {
 
     $result = $testCase->assert($assertion);
 
-    expect($result)->toBe($testCase);
-    expect($testCase->assertions())->toHaveCount(1);
-    expect($testCase->assertions()[0])->toBe($assertion);
+    expect($result)->toBe($testCase)
+        ->and($testCase->assertions())->toHaveCount(1)
+        ->and($testCase->assertions()[0])->toBe($assertion);
 });
 
 test('it can add multiple assertions', function () {
@@ -53,9 +53,9 @@ test('it can add multiple assertions', function () {
     $testCase->assert($assertion1);
     $testCase->assert($assertion2);
 
-    expect($testCase->assertions())->toHaveCount(2);
-    expect($testCase->assertions()[0])->toBe($assertion1);
-    expect($testCase->assertions()[1])->toBe($assertion2);
+    expect($testCase->assertions())->toHaveCount(2)
+        ->and($testCase->assertions()[0])->toBe($assertion1)
+        ->and($testCase->assertions()[1])->toBe($assertion2);
 });
 
 test('and method returns a new TestCase from evaluation', function () {
@@ -66,9 +66,9 @@ test('and method returns a new TestCase from evaluation', function () {
 
     $result = $testCase->and($newVariables);
 
-    expect($result)->toBeInstanceOf(TestCase::class);
-    expect($result)->not->toBe($testCase);
-    expect($result->variables())->toBe($newVariables);
+    expect($result)->toBeInstanceOf(TestCase::class)
+        ->and($result)->not->toBe($testCase)
+        ->and($result->variables())->toBe($newVariables);
 });
 
 test('and method can be chained with assertions', function () {
@@ -82,8 +82,8 @@ test('and method can be chained with assertions', function () {
         ->and($newVariables)
         ->toContain('second');
 
-    expect($result)->toBeInstanceOf(TestCase::class);
-    expect($result)->not->toBe($testCase);
-    expect($testCase->assertions())->toHaveCount(1);
-    expect($result->assertions())->toHaveCount(1);
+    expect($result)->toBeInstanceOf(TestCase::class)
+        ->and($result)->not->toBe($testCase)
+        ->and($testCase->assertions())->toHaveCount(1)
+        ->and($result->assertions())->toHaveCount(1);
 });
