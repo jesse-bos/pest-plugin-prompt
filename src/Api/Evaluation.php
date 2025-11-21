@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Pest\Prompt\Api;
 
+use Pest\Prompt\Promptfoo\Promptfoo;
+
 class Evaluation
 {
     private ?string $description = null;
@@ -30,10 +32,21 @@ class Evaluation
         return $this;
     }
 
+    private function addProvider(string $provider): self
+    {
+        $this->providers[] = $provider;
+
+        return $this;
+    }
+
     public function usingProvider(string ...$providers): self
     {
+        if (empty($providers)) {
+            return $this->addProvider(...Promptfoo::defaultProviders());
+        }
+
         foreach ($providers as $provider) {
-            $this->providers[] = $provider;
+            $this->addProvider($provider);
         }
 
         return $this;
