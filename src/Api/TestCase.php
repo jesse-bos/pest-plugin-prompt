@@ -4,11 +4,15 @@ declare(strict_types=1);
 
 namespace Pest\Prompt\Api;
 
+use Pest\Prompt\Api\Concerns\CanContain;
+
 /**
  * @mixin Assertion
  */
 class TestCase
 {
+    use CanContain;
+
     /** @var Assertion[] */
     private array $assertions = [];
 
@@ -41,19 +45,6 @@ class TestCase
         $this->assertions[] = $assertion;
 
         return $this;
-    }
-
-    /**
-     * @param  array<string,mixed>  $options
-     */
-    public function toContain(string $contains, bool $strict = false, ?float $threshold = null, array $options = []): self
-    {
-        return $this->assert(new Assertion(
-            $strict ? 'contains' : 'icontains',
-            $contains,
-            $threshold,
-            $options,
-        ));
     }
 
     /**
