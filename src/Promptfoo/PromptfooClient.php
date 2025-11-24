@@ -7,6 +7,7 @@ namespace Pest\Prompt\Promptfoo;
 use Pest\Prompt\Api\Evaluation;
 use Pest\Prompt\Contracts\EvaluatorClient;
 use Pest\Prompt\Exceptions\ExecutionException;
+use Symfony\Component\Process\Exception\ProcessTimedOutException;
 use Symfony\Component\Process\Process;
 
 class PromptfooClient implements EvaluatorClient
@@ -44,11 +45,32 @@ class PromptfooClient implements EvaluatorClient
 
         $process->setTimeout(300);
 
-        $process->run();
+        try {
+            $process->run();
+        } catch (ProcessTimedOutException) {
+            throw new ExecutionException(
+                'Promptfoo command timed out after 300 seconds. The process may be hanging or waiting for a response.',
+                implode(' ', $command),
+                $process->getOutput().$process->getErrorOutput(),
+                $process->getExitCode() ?? 1
+            );
+        }
 
-        if (! $process->isSuccessful()) {
-            $combinedOutput = $process->getOutput().$process->getErrorOutput();
-            throw new ExecutionException('Command execution failed.', implode(' ', $command), $combinedOutput, $process->getExitCode() ?: 1);
+        $combinedOutput = $process->getOutput().$process->getErrorOutput();
+
+        $evaluationComplete = str_contains($combinedOutput, 'Evaluation complete') ||
+            str_contains($combinedOutput, '✔ Evaluation complete');
+
+        if (! $process->isSuccessful() && ! $evaluationComplete) {
+            throw new ExecutionException(
+                sprintf(
+                    'Promptfoo command failed: %s',
+                    $process->getErrorOutput() ?: $process->getOutput()
+                ),
+                implode(' ', $command),
+                $process->getOutput(),
+                $process->getExitCode() ?? 1
+            );
         }
     }
 
