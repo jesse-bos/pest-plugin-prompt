@@ -7,6 +7,7 @@ namespace Pest\Prompt;
 use Pest\Contracts\Plugins\Bootable;
 use Pest\Contracts\Plugins\HandlesArguments;
 use Pest\Plugins\Concerns\HandleArguments;
+use Pest\Prompt\Promptfoo\Promptfoo;
 use Pest\TestSuite;
 use Symfony\Component\Console\Input\ArgvInput;
 
@@ -46,7 +47,7 @@ final class Plugin implements Bootable, HandlesArguments
             $outputPath = self::DEFAULT_OUTPUT_PATH;
         }
 
-        OutputPath::set($outputPath);
+        Promptfoo::setOutputFolder($outputPath);
 
         // Remove the value if it exists as a separate argument (e.g., 'test-output' in '--output test-output')
         $arguments = $this->popArgument($outputPath, $arguments);
