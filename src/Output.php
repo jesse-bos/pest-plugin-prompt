@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Pest\Prompt;
 
-class OutputPath
+class Output
 {
     private function __construct(private readonly ?string $path = null) {}
 
-    public static function from(?string $path): self
+    public static function toFolder(?string $path): self
     {
         return new self($path);
     }
@@ -25,7 +25,7 @@ class OutputPath
     {
         /** @phpstan-ignore-next-line */
         $testName = (string) test()->name();
-        $datetime = date('Y_m_d_H_i_s');
+        $datetime = date('Y-m-d_His');
 
         // Remove Pest's internal prefix
         $testName = str_replace('__pest_evaluable_', '', $testName);

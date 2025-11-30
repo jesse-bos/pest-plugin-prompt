@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Pest\Prompt\Promptfoo;
 
 use Pest\Prompt\Api\Evaluation;
-use Pest\Prompt\OutputPath;
+use Pest\Prompt\Output;
 
 /**
  * @internal

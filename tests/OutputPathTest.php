@@ -2,48 +2,48 @@
 
 declare(strict_types=1);
 
-use Pest\Prompt\OutputPath;
+use Pest\Prompt\Output;
 
 beforeEach(function () {
-    OutputPath::clear();
+    Output::clear();
 });
 
 test('has returns false by default', function () {
-    expect(OutputPath::has())->toBeFalse();
+    expect(Output::has())->toBeFalse();
 });
 
 test('get returns null by default', function () {
-    expect(OutputPath::get())->toBeNull();
+    expect(Output::get())->toBeNull();
 });
 
 test('set sets the path', function () {
     $path = '/path/to/output.html';
 
-    OutputPath::set($path);
+    Output::set($path);
 
-    expect(OutputPath::has())->toBeTrue()
-        ->and(OutputPath::get())->toBe($path);
+    expect(Output::has())->toBeTrue()
+        ->and(Output::get())->toBe($path);
 });
 
 test('clear resets the output path', function () {
-    OutputPath::set('/path/to/output.html');
+    Output::set('/path/to/output.html');
 
-    OutputPath::clear();
+    Output::clear();
 
-    expect(OutputPath::has())->toBeFalse()
-        ->and(OutputPath::get())->toBeNull();
+    expect(Output::has())->toBeFalse()
+        ->and(Output::get())->toBeNull();
 });
 
 test('set overwrites previous path', function () {
-    OutputPath::set('/first/path.html');
+    Output::set('/first/path.html');
 
-    OutputPath::set('/second/path.html');
+    Output::set('/second/path.html');
 
-    expect(OutputPath::get())->toBe('/second/path.html');
+    expect(Output::get())->toBe('/second/path.html');
 });
 
 test('generate sanitizes special characters: (test) with [special] chars!', function () {
-    $result = OutputPath::generate('output');
+    $result = Output::generate('output');
 
     // Should sanitize special characters from test name (spaces, colons, parentheses, brackets become underscores, like Pest does)
     // The exact path format: output/datetime_sanitized_test_name.html
