@@ -8,10 +8,6 @@ class OutputPath
 {
     private static ?string $outputPath = null;
 
-    private static int $counter = 0;
-
-    private static ?string $lastTestName = null;
-
     public static function set(string $path): void
     {
         self::$outputPath = $path;
@@ -30,8 +26,6 @@ class OutputPath
     public static function clear(): void
     {
         self::$outputPath = null;
-        self::$counter = 0;
-        self::$lastTestName = null;
     }
 
     public static function generate(string $path): string
@@ -51,20 +45,11 @@ class OutputPath
         // Remove Pest's internal prefix
         $testName = str_replace('__pest_evaluable_', '', $testName);
 
-        // Reset counter if this is a new test
-        if (self::$lastTestName !== $testName) {
-            self::$counter = 0;
-            self::$lastTestName = $testName;
-        }
-
         // Sanitize test name for filename (convert special characters to underscores, like Pest does)
         $sanitizedTestName = (string) preg_replace('/[^a-zA-Z0-9-_]/', '_', $testName);
         $sanitizedTestName = (string) preg_replace('/_+/', '_', $sanitizedTestName); // Replace multiple underscores with single underscore
         $sanitizedTestName = trim($sanitizedTestName, '_'); // Remove leading/trailing underscores
 
-        // Increment counter for multiple evaluations in the same test
-        self::$counter++;
-
-        return $datetime.'_'.$sanitizedTestName.'_'.self::$counter.'.html';
+        return $datetime.'_'.$sanitizedTestName.'.html';
     }
 }
