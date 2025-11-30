@@ -15,6 +15,8 @@ class Promptfoo
      */
     private static array $defaultProviders = ['openai:gpt-4o-mini'];
 
+    private static ?string $outputFolder = null;
+
     public static function initialize(): PromptfooClient
     {
         return new PromptfooClient(self::$promptfooCommand);
@@ -39,5 +41,15 @@ class Promptfoo
     public static function setDefaultProviders(array $defaultProviders): void
     {
         self::$defaultProviders = $defaultProviders;
+    }
+
+    public static function setOutputFolder(string $path): void
+    {
+        self::$outputFolder = $path;
+    }
+
+    public static function outputFolder(): ?string
+    {
+        return self::$outputFolder;
     }
 }

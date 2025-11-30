@@ -7,21 +7,24 @@ namespace Pest\Prompt\Promptfoo;
 use Pest\Prompt\Api\Evaluation;
 use Pest\Prompt\OutputPath;
 
-class PendingEvaluation
+/**
+ * @internal
+ */
+final readonly class PendingEvaluation
 {
     public function __construct(
-        public readonly Evaluation $evaluation,
-        public readonly string $configPath,
-        public readonly string $outputPath,
-        public readonly ?string $userOutputPath = null,
+        public Evaluation $evaluation,
+        public string $configPath,
+        public string $outputPath,
+        public ?string $userOutputPath = null,
     ) {}
 
     public static function create(Evaluation $evaluation): self
     {
         $userOutputPath = null;
 
-        if (OutputPath::has() && ($path = OutputPath::get()) !== null) {
-            $userOutputPath = OutputPath::generate($path);
+        if (Promptfoo::outputFolder() !== null) {
+            $userOutputPath = OutputPath::from(Promptfoo::outputFolder())->generate();
         }
 
         return new self(

@@ -6,37 +6,22 @@ namespace Pest\Prompt;
 
 class OutputPath
 {
-    private static ?string $outputPath = null;
+    private function __construct(private readonly ?string $path = null) {}
 
-    public static function set(string $path): void
+    public static function from(?string $path): self
     {
-        self::$outputPath = $path;
+        return new self($path);
     }
 
-    public static function get(): ?string
-    {
-        return self::$outputPath;
-    }
-
-    public static function has(): bool
-    {
-        return self::$outputPath !== null;
-    }
-
-    public static function clear(): void
-    {
-        self::$outputPath = null;
-    }
-
-    public static function generate(string $path): string
+    public function generate(): string
     {
         // Ensure folder path ends with directory separator
-        $folderPath = rtrim($path, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
+        $folderPath = rtrim($this->path ?: '', DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
 
-        return $folderPath.self::generateFilename();
+        return $folderPath.$this->generateFilename();
     }
 
-    private static function generateFilename(): string
+    private function generateFilename(): string
     {
         /** @phpstan-ignore-next-line */
         $testName = (string) test()->name();
