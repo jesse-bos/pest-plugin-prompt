@@ -5,18 +5,57 @@ declare(strict_types=1);
 namespace Pest\Prompt;
 
 use Pest\Contracts\Plugins\Bootable;
+use Pest\Contracts\Plugins\HandlesArguments;
+use Pest\Plugins\Concerns\HandleArguments;
 use Pest\TestSuite;
+use Symfony\Component\Console\Input\ArgvInput;
 
 /**
  * @internal
  */
-final class Plugin implements Bootable
+final class Plugin implements Bootable, HandlesArguments
 {
+    use HandleArguments;
+
+    private const string OUTPUT_OPTION = 'output';
+
+    private const string DEFAULT_OUTPUT_PATH = 'prompt-tests-output';
+
     public function boot(): void
     {
         pest()->afterEach(function (): void {
             TestLifecycle::evaluate();
         })->in($this->in());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function handleArguments(array $arguments): array
+    {
+        if (! $this->hasArgument('--'.self::OUTPUT_OPTION, $arguments)) {
+            return $arguments;
+        }
+
+        $input = new ArgvInput(array_values($arguments));
+
+        $outputPath = $input->getParameterOption('--'.self::OUTPUT_OPTION);
+
+        // Use default path if --output is provided without a value
+        if (! is_string($outputPath) || $outputPath === '') {
+            $outputPath = self::DEFAULT_OUTPUT_PATH;
+        }
+
+        OutputPath::set($outputPath);
+
+        // Remove the value if it exists as a separate argument (e.g., 'test-output' in '--output test-output')
+        $arguments = $this->popArgument($outputPath, $arguments);
+        // Remove --output if it exists as a separate argument (e.g., '--output' in '--output test-output')
+        $arguments = $this->popArgument('--'.self::OUTPUT_OPTION, $arguments);
+        // Remove --output=path variant if it exists (e.g., '--output=test-output')
+        $arguments = $this->popArgument('--'.self::OUTPUT_OPTION.'='.$outputPath, $arguments);
+
+        return $arguments;
     }
 
     private function in(): string

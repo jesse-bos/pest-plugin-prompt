@@ -79,11 +79,19 @@ class PromptfooClient implements EvaluatorClient
      */
     private function generateCommand(PendingEvaluation $pendingEvaluation): array
     {
-        return [
+        $command = [
             ...explode(' ', $this->promptfooCommand), 'eval',
             '--config', $pendingEvaluation->configPath,
             '--output', $pendingEvaluation->outputPath,
         ];
+
+        // Add user-specified output path if provided
+        if ($pendingEvaluation->userOutputPath !== null) {
+            $command[] = '--output';
+            $command[] = $pendingEvaluation->userOutputPath;
+        }
+
+        return $command;
     }
 
     private function generateConfig(PendingEvaluation $pendingEvaluation): void
