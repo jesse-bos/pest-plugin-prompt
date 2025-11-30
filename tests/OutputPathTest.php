@@ -42,25 +42,23 @@ test('set overwrites previous path', function () {
     expect(OutputPath::get())->toBe('/second/path.html');
 });
 
-test('with html fallback adds html extension when no extension is present', function () {
-    expect(OutputPath::withHtmlFallback('path/to/results'))->toBe('path/to/results.html');
-});
+test('generate always treats path as folder and adds datetime filename', function () {
+    $result1 = OutputPath::generate('path/to/results');
+    $result2 = OutputPath::generate('pest-prompt-tests');
+    $result3 = OutputPath::generate('path/to/results.html');
+    $result4 = OutputPath::generate('path/to/results.json');
 
-test('with html fallback does not change path when extension already exists', function () {
-    expect(OutputPath::withHtmlFallback('path/to/results.html'))->toBe('path/to/results.html')
-        ->and(OutputPath::withHtmlFallback('path/to/results.json'))->toBe('path/to/results.json')
-        ->and(OutputPath::withHtmlFallback('path/to/results.csv'))->toBe('path/to/results.csv');
-});
-
-test('with html fallback generates filename with datetime for folder paths', function () {
-    $result1 = OutputPath::withHtmlFallback('path/to/');
-    $result2 = OutputPath::withHtmlFallback('pest-prompt-tests/');
-
-    // Should start with folder path and end with datetime.html
-    expect($result1)->toStartWith('path/to/')
+    // Should always start with folder path and end with datetime.html
+    expect($result1)->toStartWith('path/to/results/')
         ->and($result1)->toEndWith('.html')
         ->and($result1)->toMatch('/\d{4}-\d{2}-\d{2}-\d{2}-\d{2}-\d{2}\.html$/')
         ->and($result2)->toStartWith('pest-prompt-tests/')
         ->and($result2)->toEndWith('.html')
-        ->and($result2)->toMatch('/\d{4}-\d{2}-\d{2}-\d{2}-\d{2}-\d{2}\.html$/');
+        ->and($result2)->toMatch('/\d{4}-\d{2}-\d{2}-\d{2}-\d{2}-\d{2}\.html$/')
+        ->and($result3)->toStartWith('path/to/results.html/')
+        ->and($result3)->toEndWith('.html')
+        ->and($result3)->toMatch('/\d{4}-\d{2}-\d{2}-\d{2}-\d{2}-\d{2}\.html$/')
+        ->and($result4)->toStartWith('path/to/results.json/')
+        ->and($result4)->toEndWith('.html')
+        ->and($result4)->toMatch('/\d{4}-\d{2}-\d{2}-\d{2}-\d{2}-\d{2}\.html$/');
 });

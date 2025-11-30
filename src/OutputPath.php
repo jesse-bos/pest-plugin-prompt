@@ -28,21 +28,12 @@ class OutputPath
         self::$outputPath = null;
     }
 
-    public static function withHtmlFallback(string $path): string
+    public static function generate(string $path): string
     {
-        // If path ends with slash, it's a folder - generate filename with test name and datetime
-        if (str_ends_with($path, DIRECTORY_SEPARATOR)) {
-            return $path.self::generateFilename();
-        }
+        // Ensure folder path ends with directory separator
+        $folderPath = rtrim($path, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
 
-        $pathInfo = pathinfo($path);
-
-        // If no extension, add .html (for file paths)
-        if (! isset($pathInfo['extension']) || $pathInfo['extension'] === '') {
-            return $path.'.html';
-        }
-
-        return $path;
+        return $folderPath.self::generateFilename();
     }
 
     private static function generateFilename(): string

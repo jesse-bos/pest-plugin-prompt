@@ -15,27 +15,27 @@ test('handle arguments uses default path when --output is provided without value
     $result = $plugin->handleArguments(['script.php', '--output']);
 
     expect(OutputPath::has())->toBeTrue()
-        ->and(OutputPath::get())->toBe('pest-prompt-tests/')
+        ->and(OutputPath::get())->toBe('pest-prompt-tests')
         ->and($result)->not->toContain('--output');
 });
 
-test('handle arguments sets output path when valid value is provided', function () {
+test('handle arguments sets output path when valid folder is provided', function () {
     $plugin = new Plugin;
 
-    $result = $plugin->handleArguments(['script.php', '--output', 'path/to/results.html']);
+    $result = $plugin->handleArguments(['script.php', '--output', 'custom-folder']);
 
     expect(OutputPath::has())->toBeTrue()
-        ->and(OutputPath::get())->toBe('path/to/results.html')
+        ->and(OutputPath::get())->toBe('custom-folder')
         ->and($result)->not->toContain('--output');
 });
 
 test('handle arguments sets output path when using equals syntax', function () {
     $plugin = new Plugin;
 
-    $result = $plugin->handleArguments(['script.php', '--output=path/to/results.html']);
+    $result = $plugin->handleArguments(['script.php', '--output=custom-folder']);
 
     expect(OutputPath::has())->toBeTrue()
-        ->and(OutputPath::get())->toBe('path/to/results.html')
+        ->and(OutputPath::get())->toBe('custom-folder')
         ->and($result)->not->toContain('--output');
 });
 

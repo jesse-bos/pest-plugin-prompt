@@ -95,7 +95,7 @@ class PromptfooClient implements EvaluatorClient
 
         if ($outputPath !== null) {
             $command[] = '--output';
-            $command[] = OutputPath::withHtmlFallback($outputPath);
+            $command[] = OutputPath::generate($outputPath);
         }
 
         return $command;

@@ -19,7 +19,7 @@ final class Plugin implements Bootable, HandlesArguments
 
     private const string OUTPUT_OPTION = 'output';
 
-    private const string DEFAULT_OUTPUT_PATH = 'pest-prompt-tests/';
+    private const string DEFAULT_OUTPUT_PATH = 'pest-prompt-tests';
 
     public function boot(): void
     {
