@@ -7,6 +7,7 @@ namespace Pest\Prompt\Promptfoo;
 use Pest\Prompt\Api\Evaluation;
 use Pest\Prompt\Contracts\EvaluatorClient;
 use Pest\Prompt\Exceptions\ExecutionException;
+use Pest\Prompt\OutputPath;
 use Symfony\Component\Process\Exception\ProcessTimedOutException;
 use Symfony\Component\Process\Process;
 
@@ -79,11 +80,24 @@ class PromptfooClient implements EvaluatorClient
      */
     private function generateCommand(PendingEvaluation $pendingEvaluation): array
     {
-        return [
+        $command = [
             ...explode(' ', $this->promptfooCommand), 'eval',
             '--config', $pendingEvaluation->configPath,
             '--output', $pendingEvaluation->outputPath,
         ];
+
+        // Add user-specified output path (promptfoo determines format by extension)
+        if (OutputPath::has()) {
+            $outputPath = OutputPath::get();
+
+            if ($outputPath !== null) {
+                $command[] = '--output';
+                // If no extension, add .html
+                $command[] = OutputPath::withHtmlFallback($outputPath);
+            }
+        }
+
+        return $command;
     }
 
     private function generateConfig(PendingEvaluation $pendingEvaluation): void
