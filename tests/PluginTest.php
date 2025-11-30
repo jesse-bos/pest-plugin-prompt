@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
-use Pest\Prompt\Output;
 use Pest\Prompt\Plugin;
+use Pest\Prompt\Promptfoo\Promptfoo;
 
 beforeEach(function () {
-    Output::clear();
+    // Reset output folder before each test
+    Promptfoo::setOutputFolder(null);
 });
 
 test('handle arguments uses default path when --output is provided without value', function () {
@@ -14,8 +15,8 @@ test('handle arguments uses default path when --output is provided without value
 
     $result = $plugin->handleArguments(['script.php', '--output']);
 
-    expect(Output::has())->toBeTrue()
-        ->and(Output::get())->toBe('prompt-tests-output')
+    expect(Promptfoo::shouldOutput())->toBeTrue()
+        ->and(Promptfoo::outputFolder())->toBe('prompt-tests-output')
         ->and($result)->not->toContain('--output');
 });
 
@@ -24,8 +25,8 @@ test('handle arguments sets output path when valid folder is provided', function
 
     $result = $plugin->handleArguments(['script.php', '--output', 'custom-folder']);
 
-    expect(Output::has())->toBeTrue()
-        ->and(Output::get())->toBe('custom-folder')
+    expect(Promptfoo::shouldOutput())->toBeTrue()
+        ->and(Promptfoo::outputFolder())->toBe('custom-folder')
         ->and($result)->not->toContain('--output');
 });
 
@@ -34,8 +35,8 @@ test('handle arguments sets output path when using equals syntax', function () {
 
     $result = $plugin->handleArguments(['script.php', '--output=custom-folder']);
 
-    expect(Output::has())->toBeTrue()
-        ->and(Output::get())->toBe('custom-folder')
+    expect(Promptfoo::shouldOutput())->toBeTrue()
+        ->and(Promptfoo::outputFolder())->toBe('custom-folder')
         ->and($result)->not->toContain('--output');
 });
 
@@ -56,5 +57,5 @@ test('handle arguments returns arguments unchanged when --output is not provided
     $result = $plugin->handleArguments($arguments);
 
     expect($result)->toBe($arguments)
-        ->and(Output::has())->toBeFalse();
+        ->and(Promptfoo::shouldOutput())->toBeFalse();
 });
