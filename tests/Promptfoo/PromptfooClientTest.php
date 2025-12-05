@@ -38,15 +38,12 @@ test('evaluate generates config file', function () {
 
     // We need to mock the PendingEvaluation to use our test paths
     $reflection = new ReflectionClass(PromptfooClient::class);
-    $method = $reflection->getMethod('evaluate');
-    $method->setAccessible(false);
 
     // Actually, let's test the generateCommand and generateConfig methods via reflection
     $pending = PendingEvaluation::create($evaluation);
 
     // Test generateCommand
     $generateCommandMethod = $reflection->getMethod('generateCommand');
-    $generateCommandMethod->setAccessible(true);
     $command = $generateCommandMethod->invoke($client, $pending);
 
     expect($command)->toBeArray()
@@ -62,7 +59,6 @@ test('generateCommand includes user output path when provided', function () {
     // Manually set userOutputPath via reflection
     $reflection = new ReflectionClass(PendingEvaluation::class);
     $property = $reflection->getProperty('userOutputPath');
-    $property->setAccessible(true);
 
     $newPending = new PendingEvaluation(
         $pending->evaluation,
@@ -74,7 +70,6 @@ test('generateCommand includes user output path when provided', function () {
     $client = new PromptfooClient('test-command');
     $reflection = new ReflectionClass(PromptfooClient::class);
     $method = $reflection->getMethod('generateCommand');
-    $method->setAccessible(true);
 
     $command = $method->invoke($client, $newPending);
 
@@ -96,7 +91,6 @@ test('cleanup removes config and output files', function () {
     $client = new PromptfooClient('test-command');
     $reflection = new ReflectionClass(PromptfooClient::class);
     $method = $reflection->getMethod('cleanup');
-    $method->setAccessible(true);
 
     $method->invoke($client, $pending);
 
@@ -119,7 +113,6 @@ test('cleanup handles non-existent files gracefully', function () {
     $client = new PromptfooClient('test-command');
     $reflection = new ReflectionClass(PromptfooClient::class);
     $method = $reflection->getMethod('cleanup');
-    $method->setAccessible(true);
 
     // Should not throw an error
     $method->invoke($client, $pending);

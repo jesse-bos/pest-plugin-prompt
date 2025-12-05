@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use InvalidArgumentException;
 use KevinPijning\Prompt\Api\Assertion;
 use KevinPijning\Prompt\Api\Evaluation;
 use KevinPijning\Prompt\Promptfoo\EvaluationResult;
@@ -112,7 +111,6 @@ test('handleEvaluationResult processes all results', function () {
 
     $reflection = new ReflectionClass(TestLifecycle::class);
     $method = $reflection->getMethod('handleEvaluationResult');
-    $method->setAccessible(true);
 
     // Should not throw for passing results
     $method->invoke(null, $evaluationResult);
@@ -144,10 +142,9 @@ test('assertResult throws when error is present and no grading result', function
 
     $reflection = new ReflectionClass(TestLifecycle::class);
     $method = $reflection->getMethod('assertResult');
-    $method->setAccessible(true);
 
     expect(fn () => $method->invoke(null, $result))
-        ->toThrow(InvalidArgumentException::class)
+        ->toThrow(\InvalidArgumentException::class)
         ->and(fn () => $method->invoke(null, $result))
         ->toThrow('Test error');
 });
@@ -176,10 +173,9 @@ test('assertResult throws when no grading result is given', function () {
 
     $reflection = new ReflectionClass(TestLifecycle::class);
     $method = $reflection->getMethod('assertResult');
-    $method->setAccessible(true);
 
     expect(fn () => $method->invoke(null, $result))
-        ->toThrow(InvalidArgumentException::class)
+        ->toThrow(\InvalidArgumentException::class)
         ->and(fn () => $method->invoke(null, $result))
         ->toThrow('No grading result given');
 });
@@ -222,7 +218,6 @@ test('assertComponentResult throws when component fails', function () {
 
     $reflection = new ReflectionClass(TestLifecycle::class);
     $method = $reflection->getMethod('assertComponentResult');
-    $method->setAccessible(true);
 
     expect(fn () => $method->invoke(null, $componentResult, $result))
         ->toThrow(Exception::class);
@@ -266,7 +261,6 @@ test('buildFailureMessage creates comprehensive error message', function () {
 
     $reflection = new ReflectionClass(TestLifecycle::class);
     $method = $reflection->getMethod('buildFailureMessage');
-    $method->setAccessible(true);
 
     $message = $method->invoke(null, $componentResult, $result);
 
@@ -317,7 +311,6 @@ test('buildFailureMessage handles missing response output', function () {
 
     $reflection = new ReflectionClass(TestLifecycle::class);
     $method = $reflection->getMethod('buildFailureMessage');
-    $method->setAccessible(true);
 
     $message = $method->invoke(null, $componentResult, $result);
 

@@ -64,7 +64,6 @@ test('in method returns correct path', function () {
     $plugin = new Plugin;
     $reflection = new ReflectionClass($plugin);
     $method = $reflection->getMethod('in');
-    $method->setAccessible(true);
 
     $result = $method->invoke($plugin);
 
