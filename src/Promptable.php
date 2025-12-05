@@ -16,6 +16,6 @@ trait Promptable // @phpstan-ignore-line
      */
     public function prompt(string ...$prompts): Evaluation
     {
-        return $this->prompt(...$prompts);
+        return prompt(...$prompts);
     }
 }
