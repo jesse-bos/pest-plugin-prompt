@@ -27,8 +27,8 @@ final class AssertionTemplates
 
         foreach (self::$templates as $name => $template) {
             $evaluation->defineTemplate(
-                $name,
-                new Assertion(
+                name: $name,
+                assertion: new Assertion(
                     type: $template['type'],
                     value: $template['value'] ?? null,
                     threshold: $template['threshold'] ?? null,
@@ -74,17 +74,16 @@ final class AssertionTemplates
 
     private static function defaultPath(): ?string
     {
-        if (class_exists(TestSuite::class)) {
-            $root = TestSuite::getInstance()->rootPath ?? null;
-            if ($root !== null) {
-                return rtrim($root, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.'tests'.DIRECTORY_SEPARATOR.'assertion-templates.php';
-            }
+        if (! class_exists(TestSuite::class)) {
+            return null;
         }
 
-        $cwd = getcwd();
+        $root = TestSuite::getInstance()->rootPath ?? null;
 
-        return $cwd === false
-            ? null
-            : rtrim($cwd, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.'tests'.DIRECTORY_SEPARATOR.'assertion-templates.php';
+        if ($root === null) {
+            return null;
+        }
+
+        return rtrim($root, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.'tests'.DIRECTORY_SEPARATOR.'assertion-templates.php';
     }
 }
