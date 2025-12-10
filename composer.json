@@ -51,8 +51,7 @@
             "@test:lint",
             "@test:types",
             "@test:unit"
-        ],
-        "prompt:publish-assertions-templates": "php -r \"if (file_exists('tests/assertion-templates.php')) { exit(0); } copy('tests/fixtures/assertion-templates.php', 'tests/assertion-templates.php'); echo 'Created tests/assertion-templates.php'.PHP_EOL;\""
+        ]
     },
     "extra": {
         "pest": {
