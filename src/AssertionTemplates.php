@@ -29,10 +29,10 @@ final class AssertionTemplates
             $evaluation->defineTemplate(
                 $name,
                 new Assertion(
-                    $template['type'],
-                    $template['value'] ?? null,
-                    $template['threshold'] ?? null,
-                    $template['options'] ?? null,
+                    type: $template['type'],
+                    value: $template['value'] ?? null,
+                    threshold: $template['threshold'] ?? null,
+                    options: $template['options'] ?? null,
                 )
             );
         }
