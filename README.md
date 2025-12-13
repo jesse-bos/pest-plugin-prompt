@@ -25,7 +25,6 @@ This plugin brings LLM prompt testing to your Pest test suite, powered by [promp
     - [`expect()`](#expect)
     - [`and()`](#and)
   - [Assertion Methods](#assertion-methods)
-    - [`not` Modifier](#not-modifier)
     - [`toContain()`](#tocontain)
     - [`toContainAll()`](#tocontainall)
     - [`toContainAny()`](#tocontainany)
@@ -34,6 +33,7 @@ This plugin brings LLM prompt testing to your Pest test suite, powered by [promp
     - [`toContainSql()`](#tocontainsql)
     - [`toContainXml()`](#tocontainxml)
     - [`toBeJudged()`](#tobejudged)
+    - [`not` Modifier](#not-modifier)
   - [Provider Configuration](#provider-configuration)
   - [Usage Examples](#usage-examples)
   - [CLI Options](#cli-options)
@@ -237,16 +237,6 @@ prompt('Greet {{name}} warmly.')
 
 ### Assertion Methods
 
-#### `not` Modifier
-
-Negate any assertion by using the `not` modifier. This works just like Pest's `not` modifier.
-
-```php
-prompt('Write a happy birthday message.')
-    ->usingProvider('openai:gpt-4o-mini')
-    ->expect()
-    ->not->toContain('condolences');
-
 #### `toContain()`
 
 Assert that the response contains specific text. Case-insensitive by default.
@@ -381,6 +371,17 @@ prompt('Write a product description.')
     ->usingProvider('openai:gpt-4o-mini')
     ->expect()
     ->toBeJudged('Should be professional and engaging.', options: ['provider': 'openai:gpt-4']);
+```
+
+#### `not` Modifier
+
+Negate any assertion by using the `not` modifier. This works just like Pest's `not` modifier.
+
+```php
+prompt('Write a happy birthday message.')
+    ->usingProvider('openai:gpt-4o-mini')
+    ->expect()
+    ->not->toContain('condolences');
 ```
 
 ### Provider Configuration
