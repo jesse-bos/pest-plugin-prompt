@@ -352,13 +352,13 @@ prompt('Generate XML for a product catalog')
 
 #### `toEqual()`
 
-Assert that the response exactly equals the expected string value. This is useful for deterministic outputs where you expect an exact match.
+Assert that the response exactly equals the expected value. This is useful for deterministic outputs where you expect an exact match.
 
 ```php
-prompt('What is 2+2?')
+prompt('Calculate 335 + 85. Return only the number.')
     ->usingProvider('openai:gpt-4o-mini')
     ->expect()
-    ->toEqual('4');
+    ->toEqual(420);
 ```
 
 #### `toBeJudged()`
