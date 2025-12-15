@@ -12,10 +12,10 @@ trait CanContain
     public function toContain(string $contains, bool $strict = false, ?float $threshold = null, array $options = []): self
     {
         return $this->assert(new Assertion(
-            $strict ? 'contains' : 'icontains',
-            $contains,
-            $threshold,
-            $options,
+            type: $strict ? 'contains' : 'icontains',
+            value: $contains,
+            threshold: $threshold,
+            options: $options,
         ));
     }
 
@@ -26,10 +26,10 @@ trait CanContain
     public function toContainAll(array $contains, bool $strict = false, ?float $threshold = null, array $options = []): self
     {
         return $this->assert(new Assertion(
-            $strict ? 'contains-all' : 'icontains-all',
-            $contains,
-            $threshold,
-            $options,
+            type: $strict ? 'contains-all' : 'icontains-all',
+            value: $contains,
+            threshold: $threshold,
+            options: $options,
         ));
     }
 

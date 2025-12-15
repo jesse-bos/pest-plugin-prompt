@@ -1,19 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace KevinPijning\Prompt\Api\Concerns;
 
 use KevinPijning\Prompt\Api\Assertion;
 
-trait CanBeJudged
+trait CanEqual
 {
     /**
      * @param  array<string,mixed>  $options
      */
-    public function toBeJudged(string $contains, ?float $threshold = null, array $options = []): self
+    public function toEqual(mixed $value, ?float $threshold = null, array $options = []): self
     {
         return $this->assert(new Assertion(
-            type: 'llm-rubric',
-            value: $contains,
+            type: 'equals',
+            value: $value,
             threshold: $threshold,
             options: $options,
         ));

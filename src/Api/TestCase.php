@@ -7,6 +7,7 @@ namespace KevinPijning\Prompt\Api;
 use KevinPijning\Prompt\Api\Concerns\CanBeJudged;
 use KevinPijning\Prompt\Api\Concerns\CanContain;
 use RuntimeException;
+use KevinPijning\Prompt\Api\Concerns\CanEqual;
 
 /**
  * @property-read TestCase $not
@@ -14,7 +15,7 @@ use RuntimeException;
 
 class TestCase
 {
-    use CanBeJudged, CanContain;
+    use CanBeJudged, CanContain, CanEqual;
 
     /** @var Assertion[] */
     private array $assertions = [];
