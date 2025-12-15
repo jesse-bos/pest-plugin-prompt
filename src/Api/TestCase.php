@@ -9,8 +9,9 @@ use KevinPijning\Prompt\Api\Concerns\CanContain;
 use RuntimeException;
 
 /**
- * @mixin Assertion
+ * @property-read TestCase $not
  */
+
 class TestCase
 {
     use CanBeJudged, CanContain;
