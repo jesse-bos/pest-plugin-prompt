@@ -101,13 +101,6 @@ class Evaluation
         return $this->defaultTestCase;
     }
 
-    public function clearTests(): self
-    {
-        $this->testCases = [];
-
-        return $this;
-    }
-
     public function description(): ?string
     {
         return $this->description;

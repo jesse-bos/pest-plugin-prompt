@@ -18,7 +18,7 @@ final class Plugin implements Bootable, HandlesArguments
 {
     use HandleArguments;
 
-    private const string OUTPUT_OPTION = 'output';
+    private const string OUTPUT_FLAG = '--output';
 
     private const string DEFAULT_OUTPUT_PATH = 'prompt-tests-output';
 
@@ -34,13 +34,13 @@ final class Plugin implements Bootable, HandlesArguments
      */
     public function handleArguments(array $arguments): array
     {
-        if (! $this->hasArgument('--'.self::OUTPUT_OPTION, $arguments)) {
+        if (! $this->hasArgument(self::OUTPUT_FLAG, $arguments)) {
             return $arguments;
         }
 
         $input = new ArgvInput(array_values($arguments));
 
-        $outputPath = $input->getParameterOption('--'.self::OUTPUT_OPTION);
+        $outputPath = $input->getParameterOption(self::OUTPUT_FLAG);
 
         // Use default path if --output is provided without a value
         if (! is_string($outputPath) || $outputPath === '') {
@@ -52,9 +52,9 @@ final class Plugin implements Bootable, HandlesArguments
         // Remove the value if it exists as a separate argument (e.g., 'test-output' in '--output test-output')
         $arguments = $this->popArgument($outputPath, $arguments);
         // Remove --output if it exists as a separate argument (e.g., '--output' in '--output test-output')
-        $arguments = $this->popArgument('--'.self::OUTPUT_OPTION, $arguments);
+        $arguments = $this->popArgument(self::OUTPUT_FLAG, $arguments);
         // Remove --output=path variant if it exists (e.g., '--output=test-output')
-        $arguments = $this->popArgument('--'.self::OUTPUT_OPTION.'='.$outputPath, $arguments);
+        $arguments = $this->popArgument(self::OUTPUT_FLAG.'='.$outputPath, $arguments);
 
         return $arguments;
     }

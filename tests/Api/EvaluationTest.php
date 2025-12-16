@@ -156,24 +156,6 @@ test('expect method can create multiple test cases', function () {
         ->and($testCase3->variables())->toBe($variables3);
 });
 
-test('clearTests method returns self', function () {
-    $evaluation = new Evaluation(['prompt1']);
-
-    $result = $evaluation->clearTests();
-
-    expect($result)->toBe($evaluation);
-});
-
-test('clearTests method can be chained', function () {
-    $evaluation = new Evaluation(['prompt1']);
-
-    $result = $evaluation
-        ->clearTests()
-        ->clearTests();
-
-    expect($result)->toBe($evaluation);
-});
-
 test('methods can be chained together', function () {
     $evaluation = new Evaluation(['prompt1']);
 
@@ -184,21 +166,6 @@ test('methods can be chained together', function () {
         ->toContain('test');
 
     expect($result)->toBeInstanceOf(TestCase::class);
-});
-
-test('expect method works after clearTests', function () {
-    $evaluation = new Evaluation(['prompt1']);
-    $variables1 = ['key1' => 'value1'];
-    $variables2 = ['key2' => 'value2'];
-
-    $testCase1 = $evaluation->expect($variables1);
-    $evaluation->clearTests();
-    $testCase2 = $evaluation->expect($variables2);
-
-    expect($testCase1)->toBeInstanceOf(TestCase::class)
-        ->and($testCase2)->toBeInstanceOf(TestCase::class)
-        ->and($testCase2)->not->toBe($testCase1)
-        ->and($testCase2->variables())->toBe($variables2);
 });
 
 test('usingProvider method can accept a callable that configures a provider', function () {

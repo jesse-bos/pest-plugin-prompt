@@ -10,6 +10,8 @@ class Promptfoo
 {
     private static string $promptfooCommand = 'npx promptfoo@latest';
 
+    private static int $promptfooTimeout = 300;
+
     /**
      * @var string[]
      */
@@ -19,7 +21,7 @@ class Promptfoo
 
     public static function initialize(): PromptfooClient
     {
-        return new PromptfooClient(self::$promptfooCommand);
+        return new PromptfooClient(self::$promptfooCommand, self::$promptfooTimeout);
     }
 
     public static function evaluate(Evaluation $valuation): EvaluationResult

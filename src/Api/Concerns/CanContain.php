@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace KevinPijning\Prompt\Api\Concerns;
 
 use KevinPijning\Prompt\Api\Assertion;
@@ -40,10 +42,10 @@ trait CanContain
     public function toContainAny(array $contains, bool $strict = false, ?float $threshold = null, array $options = []): self
     {
         return $this->assert(new Assertion(
-            $strict ? 'contains-any' : 'icontains-any',
-            $contains,
-            $threshold,
-            $options,
+            type: $strict ? 'contains-any' : 'icontains-any',
+            value: $contains,
+            threshold: $threshold,
+            options: $options,
         ));
     }
 

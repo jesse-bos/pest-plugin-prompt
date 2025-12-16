@@ -49,6 +49,7 @@ final readonly class ConfigBuilder
             'config' => array_filter([
                 ...array_filter($provider->getConfig()),
                 'temperature' => $provider->getTemperature(),
+                'max_tokens' => $provider->getMaxTokens(),
                 'top_p' => $provider->getTopP(),
                 'frequency_penalty' => $provider->getFrequencyPenalty(),
                 'presence_penalty' => $provider->getPresencePenalty(),

@@ -64,35 +64,35 @@ class Provider
         return $this;
     }
 
-    public function temperature(?float $temperature): Provider
+    public function temperature(?float $temperature): self
     {
         $this->temperature = $temperature;
 
         return $this;
     }
 
-    public function maxTokens(?int $maxTokens): Provider
+    public function maxTokens(?int $maxTokens): self
     {
         $this->maxTokens = $maxTokens;
 
         return $this;
     }
 
-    public function topP(?float $topP): Provider
+    public function topP(?float $topP): self
     {
         $this->topP = $topP;
 
         return $this;
     }
 
-    public function frequencyPenalty(?float $frequencyPenalty): Provider
+    public function frequencyPenalty(?float $frequencyPenalty): self
     {
         $this->frequencyPenalty = $frequencyPenalty;
 
         return $this;
     }
 
-    public function presencePenalty(?float $presencePenalty): Provider
+    public function presencePenalty(?float $presencePenalty): self
     {
         $this->presencePenalty = $presencePenalty;
 
@@ -102,7 +102,7 @@ class Provider
     /**
      * @param  string[]  $stop
      */
-    public function stop(?array $stop): Provider
+    public function stop(?array $stop): self
     {
         $this->stop = $stop;
 

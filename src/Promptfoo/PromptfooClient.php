@@ -13,7 +13,8 @@ use Symfony\Component\Process\Process;
 class PromptfooClient implements EvaluatorClient
 {
     public function __construct(
-        private readonly string $promptfooCommand
+        private readonly string $promptfooCommand,
+        private readonly int $promptfooTimeout = 300,
     ) {}
 
     public function evaluate(Evaluation $evaluation): EvaluationResult
@@ -43,7 +44,7 @@ class PromptfooClient implements EvaluatorClient
     {
         $process = new Process($command, env: $_ENV);
 
-        $process->setTimeout(300);
+        $process->setTimeout($this->promptfooTimeout);
 
         try {
             $process->run();
