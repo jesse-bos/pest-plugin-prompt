@@ -11,6 +11,7 @@ use KevinPijning\Prompt\Api\Concerns\CanBeScored;
 use KevinPijning\Prompt\Api\Concerns\CanBeSimilar;
 use KevinPijning\Prompt\Api\Concerns\CanBeValid;
 use KevinPijning\Prompt\Api\Concerns\CanContain;
+use KevinPijning\Prompt\Api\Concerns\CanEnclose;
 use KevinPijning\Prompt\Api\Concerns\CanEqual;
 use KevinPijning\Prompt\Api\Concerns\CanHaveCustomValidation;
 use KevinPijning\Prompt\Api\Concerns\CanHaveFinishReason;
@@ -25,7 +26,7 @@ use RuntimeException;
  */
 class TestCase
 {
-    use CanBeClassified, CanBeJudged, CanBeRefused, CanBeScored, CanBeSimilar, CanBeValid, CanContain, CanEqual, CanHaveCustomValidation, CanHaveFinishReason, CanHaveFunctionCalls, CanHavePerformance, CanHaveTraces, CanMatch;
+    use CanBeClassified, CanBeJudged, CanBeRefused, CanBeScored, CanBeSimilar, CanBeValid, CanContain, CanEnclose, CanEqual, CanHaveCustomValidation, CanHaveFinishReason, CanHaveFunctionCalls, CanHavePerformance, CanHaveTraces, CanMatch;
 
     /** @var Assertion[] */
     private array $assertions = [];
@@ -88,17 +89,23 @@ class TestCase
 
     /**
      * @param  array<string,mixed>  $variables
+     * @param  callable(TestCase): void|null  $callback
      */
-    public function expect(array $variables): self
+    public function expect(array $variables, ?callable $callback = null): self
     {
-        return $this->evaluation->expect($variables);
+        if (is_callable($callback)) {
+            $this->to($callback);
+        }
+
+        return $this->evaluation->expect($variables, $callback);
     }
 
     /**
      * @param  array<string,mixed>  $variables
+     * @param  callable(TestCase): void|null  $callback
      */
-    public function and(array $variables): self
+    public function and(array $variables, ?callable $callback = null): self
     {
-        return $this->expect($variables);
+        return $this->expect($variables, $callback);
     }
 }

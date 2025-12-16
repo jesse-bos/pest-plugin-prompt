@@ -75,22 +75,32 @@ class Evaluation
 
     /**
      * @param  array<string,mixed>  $variables
+     * @param  callable(TestCase): void|null  $callback
      */
-    public function expect(array $variables = []): TestCase
+    public function expect(array $variables = [], ?callable $callback = null): TestCase
     {
         $testCase = new TestCase($variables, $this);
         $this->testCases[] = $testCase;
+
+        if (is_callable($callback)) {
+            $testCase->to($callback);
+        }
 
         return $testCase;
     }
 
     /**
      * @param  array<string,mixed>  $defaultVariables
+     * @param  callable(TestCase): void|null  $callback
      */
-    public function alwaysExpect(array $defaultVariables = []): TestCase
+    public function alwaysExpect(array $defaultVariables = [], ?callable $callback = null): TestCase
     {
         if (! $this->defaultTestCase instanceof TestCase) {
             $this->defaultTestCase = new TestCase($defaultVariables, $this);
+        }
+
+        if (is_callable($callback)) {
+            $this->defaultTestCase->to($callback);
         }
 
         return $this->defaultTestCase;

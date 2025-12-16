@@ -146,3 +146,119 @@ test('expect and and methods are functionally equivalent', function () {
         ->and($result1)->not->toBe($result2) // They create different instances
         ->and($evaluation->testCases())->toHaveCount(2); // Both are added to evaluation
 });
+
+test('expect method can accept a callback that receives the new test case', function () {
+    $evaluation = new Evaluation(['prompt1', 'prompt2']);
+    $variables = ['key1' => 'value1'];
+    $testCase = new TestCase($variables, $evaluation);
+    $newVariables = ['key2' => 'value2'];
+    $callbackExecuted = false;
+    $receivedTestCase = null;
+
+    $result = $testCase->expect($newVariables, function (TestCase $tc) use (&$callbackExecuted, &$receivedTestCase) {
+        $callbackExecuted = true;
+        $receivedTestCase = $tc;
+    });
+
+    expect($callbackExecuted)->toBeTrue()
+        ->and($receivedTestCase)->toBe($result)
+        ->and($result->variables())->toBe($newVariables)
+        ->and($result)->not->toBe($testCase);
+});
+
+test('expect method callback can be used to add assertions', function () {
+    $evaluation = new Evaluation(['prompt1', 'prompt2']);
+    $variables = ['key1' => 'value1'];
+    $testCase = new TestCase($variables, $evaluation);
+    $newVariables = ['key2' => 'value2'];
+
+    $result = $testCase->expect($newVariables, function (TestCase $tc) {
+        $tc->toContain('test')
+            ->toContain('value');
+    });
+
+    expect($result->assertions())->toHaveCount(2)
+        ->and($testCase->assertions())->toHaveCount(2);
+});
+
+test('expect method works without callback', function () {
+    $evaluation = new Evaluation(['prompt1', 'prompt2']);
+    $variables = ['key1' => 'value1'];
+    $testCase = new TestCase($variables, $evaluation);
+    $newVariables = ['key2' => 'value2'];
+
+    $result = $testCase->expect($newVariables);
+
+    expect($result)->toBeInstanceOf(TestCase::class)
+        ->and($result->variables())->toBe($newVariables);
+});
+
+test('expect method callback can be null', function () {
+    $evaluation = new Evaluation(['prompt1', 'prompt2']);
+    $variables = ['key1' => 'value1'];
+    $testCase = new TestCase($variables, $evaluation);
+    $newVariables = ['key2' => 'value2'];
+
+    $result = $testCase->expect($newVariables, null);
+
+    expect($result)->toBeInstanceOf(TestCase::class)
+        ->and($result->variables())->toBe($newVariables);
+});
+
+test('and method can accept a callback that receives the new test case', function () {
+    $evaluation = new Evaluation(['prompt1', 'prompt2']);
+    $variables = ['key1' => 'value1'];
+    $testCase = new TestCase($variables, $evaluation);
+    $newVariables = ['key2' => 'value2'];
+    $callbackExecuted = false;
+    $receivedTestCase = null;
+
+    $result = $testCase->and($newVariables, function (TestCase $tc) use (&$callbackExecuted, &$receivedTestCase) {
+        $callbackExecuted = true;
+        $receivedTestCase = $tc;
+    });
+
+    expect($callbackExecuted)->toBeTrue()
+        ->and($receivedTestCase)->toBe($result)
+        ->and($result->variables())->toBe($newVariables)
+        ->and($result)->not->toBe($testCase);
+});
+
+test('and method callback can be used to add assertions', function () {
+    $evaluation = new Evaluation(['prompt1', 'prompt2']);
+    $variables = ['key1' => 'value1'];
+    $testCase = new TestCase($variables, $evaluation);
+    $newVariables = ['key2' => 'value2'];
+
+    $result = $testCase->and($newVariables, function (TestCase $tc) {
+        $tc->toContain('test')
+            ->toContain('value');
+    });
+
+    expect($result->assertions())->toHaveCount(2)
+        ->and($testCase->assertions())->toHaveCount(2);
+});
+
+test('and method works without callback', function () {
+    $evaluation = new Evaluation(['prompt1', 'prompt2']);
+    $variables = ['key1' => 'value1'];
+    $testCase = new TestCase($variables, $evaluation);
+    $newVariables = ['key2' => 'value2'];
+
+    $result = $testCase->and($newVariables);
+
+    expect($result)->toBeInstanceOf(TestCase::class)
+        ->and($result->variables())->toBe($newVariables);
+});
+
+test('and method callback can be null', function () {
+    $evaluation = new Evaluation(['prompt1', 'prompt2']);
+    $variables = ['key1' => 'value1'];
+    $testCase = new TestCase($variables, $evaluation);
+    $newVariables = ['key2' => 'value2'];
+
+    $result = $testCase->and($newVariables, null);
+
+    expect($result)->toBeInstanceOf(TestCase::class)
+        ->and($result->variables())->toBe($newVariables);
+});

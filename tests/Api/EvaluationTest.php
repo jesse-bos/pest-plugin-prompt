@@ -323,3 +323,119 @@ test('defaultTestCase getter returns the stored test case', function () {
 
     expect($evaluation->defaultTestCase())->toBe($defaultTestCase);
 });
+
+test('expect method can accept a callback that receives the test case', function () {
+    $evaluation = new Evaluation(['prompt1']);
+    $variables = ['key1' => 'value1'];
+    $callbackExecuted = false;
+    $receivedTestCase = null;
+
+    $testCase = $evaluation->expect($variables, function (TestCase $tc) use (&$callbackExecuted, &$receivedTestCase) {
+        $callbackExecuted = true;
+        $receivedTestCase = $tc;
+    });
+
+    expect($callbackExecuted)->toBeTrue()
+        ->and($receivedTestCase)->toBe($testCase)
+        ->and($testCase->variables())->toBe($variables);
+});
+
+test('expect method callback can be used to add assertions', function () {
+    $evaluation = new Evaluation(['prompt1']);
+    $variables = ['key1' => 'value1'];
+
+    $testCase = $evaluation->expect($variables, function (TestCase $tc) {
+        $tc->toContain('test')
+            ->toContain('value');
+    });
+
+    expect($testCase->assertions())->toHaveCount(2);
+});
+
+test('expect method works without callback', function () {
+    $evaluation = new Evaluation(['prompt1']);
+    $variables = ['key1' => 'value1'];
+
+    $testCase = $evaluation->expect($variables);
+
+    expect($testCase)->toBeInstanceOf(TestCase::class)
+        ->and($testCase->variables())->toBe($variables);
+});
+
+test('expect method callback can be null', function () {
+    $evaluation = new Evaluation(['prompt1']);
+    $variables = ['key1' => 'value1'];
+
+    $testCase = $evaluation->expect($variables, null);
+
+    expect($testCase)->toBeInstanceOf(TestCase::class)
+        ->and($testCase->variables())->toBe($variables);
+});
+
+test('alwaysExpect method can accept a callback that receives the test case', function () {
+    $evaluation = new Evaluation(['prompt1']);
+    $variables = ['key1' => 'value1'];
+    $callbackExecuted = false;
+    $receivedTestCase = null;
+
+    $testCase = $evaluation->alwaysExpect($variables, function (TestCase $tc) use (&$callbackExecuted, &$receivedTestCase) {
+        $callbackExecuted = true;
+        $receivedTestCase = $tc;
+    });
+
+    expect($callbackExecuted)->toBeTrue()
+        ->and($receivedTestCase)->toBe($testCase)
+        ->and($testCase->variables())->toBe($variables);
+});
+
+test('alwaysExpect method callback can be used to add assertions', function () {
+    $evaluation = new Evaluation(['prompt1']);
+    $variables = ['key1' => 'value1'];
+
+    $testCase = $evaluation->alwaysExpect($variables, function (TestCase $tc) {
+        $tc->toContain('test')
+            ->toBeJudged('should be professional');
+    });
+
+    expect($testCase->assertions())->toHaveCount(2);
+});
+
+test('alwaysExpect method callback is called on subsequent calls with existing test case', function () {
+    $evaluation = new Evaluation(['prompt1']);
+    $variables = ['key1' => 'value1'];
+    $callbackCount = 0;
+
+    $testCase1 = $evaluation->alwaysExpect($variables, function (TestCase $tc) use (&$callbackCount) {
+        $callbackCount++;
+        $tc->toContain('first');
+    });
+
+    $testCase2 = $evaluation->alwaysExpect(['key2' => 'value2'], function (TestCase $tc) use (&$callbackCount) {
+        $callbackCount++;
+        $tc->toContain('second');
+    });
+
+    expect($testCase1)->toBe($testCase2)
+        ->and($callbackCount)->toBe(2)
+        ->and($testCase1->assertions())->toHaveCount(2);
+});
+
+test('alwaysExpect method works without callback', function () {
+    $evaluation = new Evaluation(['prompt1']);
+    $variables = ['key1' => 'value1'];
+
+    $testCase = $evaluation->alwaysExpect($variables);
+
+    expect($testCase)->toBeInstanceOf(TestCase::class)
+        ->and($testCase->variables())->toBe($variables);
+});
+
+test('alwaysExpect method callback can be null', function () {
+    $evaluation = new Evaluation(['prompt1']);
+    $variables = ['key1' => 'value1'];
+
+    $testCase = $evaluation->alwaysExpect($variables, null);
+
+    expect($testCase)->toBeInstanceOf(TestCase::class)
+        ->and($testCase->variables())->toBe($variables);
+});

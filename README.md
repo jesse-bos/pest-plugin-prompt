@@ -261,12 +261,32 @@ prompt('Translate {{message}} to {{language}}.')
     ->toBeJudged('Contains the translation of Hello world! in spanish');
 ```
 
+**With callback:**
+
+You can pass an optional callback function to configure the default test case:
+
+```php
+prompt('Translate {{message}} to {{language}}.')
+    ->usingProvider('openai:gpt-4o-mini')
+    ->alwaysExpect(
+        ['message' => 'Hello World!'],
+        function (TestCase $testCase) {
+            $testCase
+                ->toBeJudged('the language is always a friendly variant')
+                ->toBeJudged('the source and output language are always mentioned in the response');
+        }
+    )
+    ->expect(['language' => 'es'])
+    ->toContain('hola');
+```
+
 **Key points:**
 - `alwaysExpect()` returns a `TestCase` instance that supports all assertion methods
 - Assertions added via `alwaysExpect()` apply to every test case in the evaluation
 - Default variables can be set and will be merged with test case variables
-- You can chain multiple assertions after `alwaysExpect()`
+- You can chain multiple assertions after `alwaysExpect()` or use a callback
 - The default test case is separate from regular test cases and won't appear in the `testCases()` array
+- If `alwaysExpect()` is called multiple times, subsequent calls will execute the callback on the existing default test case
 
 **Use cases:**
 - Ensure all responses meet quality standards (e.g., "always be professional")
@@ -298,6 +318,31 @@ prompt('You are a helpful assistant.')
     ->toContain('assistant');
 ```
 
+**With callback:**
+
+You can pass an optional callback function that receives the created `TestCase` instance. This is useful for grouping multiple assertions or applying conditional logic.
+
+```php
+prompt('Greet {{name}} warmly.')
+    ->usingProvider('openai:gpt-4o-mini')
+    ->expect(['name' => 'Alice'], function (TestCase $testCase) {
+        $testCase
+            ->toContain('Alice')
+            ->toContain('Hello')
+            ->toBeJudged('response is friendly and welcoming');
+    });
+
+// Using arrow function
+prompt('Translate {{text}} to {{language}}.')
+    ->usingProvider('openai:gpt-4o-mini')
+    ->expect(
+        ['text' => 'Hello', 'language' => 'Spanish'],
+        fn (TestCase $tc) => $tc
+            ->toContain('Hola')
+            ->toBeJudged('translation is accurate')
+    );
+```
+
 #### `and()`
 
 Chain multiple test cases for the same evaluation. Each call to `and()` creates a new test case with different variables.
@@ -312,6 +357,70 @@ prompt('Greet {{name}} warmly.')
     ->and(['name' => 'Charlie'])
     ->toContain('Charlie');
 ```
+
+**With callback:**
+
+You can pass an optional callback function that receives the newly created `TestCase`:
+
+```php
+prompt('Greet {{name}} warmly.')
+    ->usingProvider('openai:gpt-4o-mini')
+    ->expect(['name' => 'Alice'])
+    ->toContain('Alice')
+    ->and(['name' => 'Bob'], function (TestCase $testCase) {
+        $testCase
+            ->toContain('Bob')
+            ->toBeJudged('response is warm and friendly');
+    })
+    ->and(['name' => 'Charlie'], fn (TestCase $tc) => $tc->toContain('Charlie'));
+```
+
+#### `to()` and `group()`
+
+Group multiple assertions together using a callback. Both `to()` and `group()` are aliases that execute a callback with the current test case, allowing you to organize assertions logically.
+
+```php
+prompt('Explain {{topic}} in detail.')
+    ->usingProvider('openai:gpt-4o-mini')
+    ->expect(['topic' => 'quantum computing'])
+    ->to(function (TestCase $testCase) {
+        $testCase
+            ->toContain('quantum')
+            ->toContain('computing')
+            ->toBeJudged('explanation is clear and accurate')
+            ->toHaveLatency(2000);
+    });
+
+// Using group() (same as to())
+prompt('Analyze {{data}}.')
+    ->usingProvider('openai:gpt-4o-mini')
+    ->expect(['data' => 'sales figures'])
+    ->group(function (TestCase $testCase) {
+        $testCase
+            ->toContain('analysis')
+            ->toBeJudged('analysis is thorough');
+    });
+
+// Chaining multiple groups
+prompt('Review {{document}}.')
+    ->usingProvider('openai:gpt-4o-mini')
+    ->expect(['document' => 'contract'])
+    ->to(fn (TestCase $tc) => $tc->toContain('terms'))
+    ->group(fn (TestCase $tc) => $tc->toBeJudged('review is comprehensive'))
+    ->to(fn (TestCase $tc) => $tc->toHaveLatency(1500));
+```
+
+**Key points:**
+- `to()` and `group()` are functionally identical - use whichever reads better in your context
+- The callback receives the current `TestCase` instance
+- Useful for organizing related assertions together
+- Can be chained multiple times
+- Works with all assertion methods
+
+**Use cases:**
+- Group related assertions for better code organization
+- Apply conditional logic based on test case variables
+- Reuse assertion patterns across multiple test cases
 
 ### Assertion Methods
 
