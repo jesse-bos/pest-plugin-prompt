@@ -20,4 +20,12 @@ trait CanEqual
             options: $options,
         ));
     }
+
+    /**
+     * @param  array<string,mixed>  $options
+     */
+    public function toBe(mixed $value, ?float $threshold = null, array $options = []): self
+    {
+        return $this->toEqual($value, $threshold, $options);
+    }
 }

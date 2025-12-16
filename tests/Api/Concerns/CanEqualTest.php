@@ -127,3 +127,18 @@ test('toEqual accepts null values', function () {
     expect($assertion->type)->toBe('equals')
         ->and($assertion->value)->toBeNull();
 });
+
+test('toBe is an alias for toEqual', function () {
+    // Arrange
+    $evaluation = new Evaluation(['prompt1']);
+    $testCase = new TestCase([], $evaluation);
+
+    // Act
+    $testCase->toBe('first value');
+
+    // Assert
+    expect($testCase->assertions())->toHaveCount(1);
+    $assertion = $testCase->assertions()[0];
+    expect($assertion->type)->toBe('equals')
+        ->and($assertion->value)->toBe('first value');
+});

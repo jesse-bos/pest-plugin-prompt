@@ -61,7 +61,7 @@ prompt('Greet \{\{name\}\}.')
 
 **Format validators (is)**: `toBeJson(?array $schema = null)`, `toBeHtml()`, `toBeSql(?array $authorityList = null)`, `toBeXml()`.
 
-**Equality**: `toEqual(mixed $value, ?float $threshold = null)`.
+**Equality**: `toEqual(mixed $value, ?float $threshold = null)`, `toBe(mixed $value, ?float $threshold = null)`.
 
 **Similarity metrics**: `toBeSimilar(string|array $expected, ?float $threshold = null, ?string $provider = null)`, `toHaveLevenshtein(string $expected, ?float $threshold = null)`, `toHaveRougeN(int $n, string|array $expected, ?float $threshold = null)`, `toHaveFScore(string|array $expected, ?float $threshold = null)`, `toHavePerplexity(?float $threshold = null)`, `toHavePerplexityScore(?float $threshold = null)`.
 
